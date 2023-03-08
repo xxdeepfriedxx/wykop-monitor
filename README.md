@@ -28,6 +28,18 @@ For more info see the ["Documentation"](#documentation) below
 
 ## Considerations
 
+You'll need to provide at least (a) an `appkey` and a `secret`, (b) a `rtoken` or (c) a `token`. The best option is to provide an `appkey` and `secret`, that way we can generate tokens whenever we need a new one and you don't need to keep track of them. The second best option is to provide a `rtoken`, you'll be logged in and we can generate new tokens, but you'll need to keep track of the latest `rtoken` somewhere, so you can easily create a new Wykop instance. The last option is to provide a `token` but you'll be limited by the expiration date on the token, so keep that in mind.
+
+For the monitoring to work the way you'd like, there are a few things to consider:
+- When using the monitor without logging in:
+	- Global blacklists might be active (think #polityka for non-logged users)
+	- Note: user categories (buckets) are available even when not logged in 
+- When using the monitor while logged in to your account:
+	- Blacklists will be active and filter content
+	- You will be able to interact with content ([see WykopJS for more info](https://github.com/xxdeepfriedxx/wykop))
+
+## "Documentation"
+
 ### Monitor.start(options)
 - This starts the monitoring process, it should be at the end of your code
 - The available options:
@@ -41,18 +53,6 @@ For more info see the ["Documentation"](#documentation) below
 | `options.rtoken`       | `null`                      | <optional*> Your refresh token for Wykop.pl |
 | `options.username`     | `null`                      | <optional>  Your username for Wykop.pl |
 | `options.password`     | `null`                      | <optional>  Your password for Wykop.pl |
-
-You need to provide at least (a) an `appkey` and a `secret`, (b) a `rtoken` or (c) a `token`. The best option is to provide an `appkey` and `secret`, that way we can generate tokens whenever we need a new one and you don't need to keep track of them. The second best option is to provide a `rtoken`, you'll be logged in and we can generate new tokens, but you'll need to keep track of the latest `rtoken` somewhere, so you can easily create a new Wykop instance. The last option is to provide a `token` but you'll be limited by the expiration date on the token, so keep that in mind.
-
-For the monitoring to work the way you'd like, there are a few things to consider:
-- When using the monitor without logging in:
-	- Global blacklists might be active (think #polityka for non-logged users)
-	- User categories (buckets) are still available
-- When using the monitor while logged in to your account:
-	- Blacklists will be active and filter content
-	- You will be able to interact with content ([see WykopJS for more info](https://github.com/xxdeepfriedxx/wykop))
-
-## "Documentation"
 
 ### Monitor.links(options, callback)
 - Allows for monitoring new links
