@@ -1,6 +1,6 @@
 <img src="https://wykop.pl/static/img/svg/wykop-min-logo.svg" width="100">
 
-# WykopMonitor
+# WykopMonitorJS
 Simple package that allows you to monitor new content on Wykop.pl
 
 ```
@@ -196,7 +196,7 @@ Monitor.userEntries({ username: 'wykop' }, async ({ entry }) => {
 ```
 
 ### Other user actions:
-These are some more of the options that are available, but they might not work as you'd expect. WykopMonitor currenly looks for newer content based on the date the post was created, so while these functions will work just fine if the user is voting or commenting on newer content, it'll fail (no callback) when the vote or comment is on an older post. In the future I'd like to address this, but for now that's how it is. 
+These are some more of the options that are available, but they might not work as you'd expect. WykopMonitorJS currenly looks for newer content based on the date the post was created, so while these functions will work just fine if the user is voting or commenting on newer content, it'll fail (no callback) when the vote or comment is on an older post. In the future I'd like to address this, but for now that's how it is. 
 - `Monitor.userLinkVotes({ username: 'wykop' }, callback)`
 - `Monitor.userLinkComments({ username: 'wykop' }, callback)`
 - `Monitor.userEntryVotes({ username: 'wykop' }, callback)`
