@@ -9,12 +9,12 @@ let timeoutID = null
 let errorCallback = null
 
 // Main function
-exports.start = async ({ interval = defaultInterval, appkey, secret, token, rtoken, environment, username, password, debug = false }) => {
+exports.start = async ({ interval = defaultInterval, appkey, secret, token, rtoken, environment, username, password, debug = false, debugAPI = false }) => {
 
 	// Setup the Wykop SDK
 	console.log(`[wykop-monitor] [ ] Initializing Wykop SDK...`);
 	try {
-		w = new (await Wykop).default({ appkey: appkey, secret: secret, token: token, rtoken: rtoken, environment: environment });
+		w = new (await Wykop).default({ appkey: appkey, secret: secret, token: token, rtoken: rtoken, environment: environment, debug: debugAPI });
 		console.log(`[wykop-monitor] [✓] Wykop SDK Initialized`);
 	} catch (error) {
 		return console.log(`[wykop-monitor] [x] Failed to initialize Wykop SDK, see error below:\n`, error.stack ?? error.response ?? error.request ?? error);
@@ -64,6 +64,10 @@ exports.stop = () => {
 	console.log(`[wykop-monitor] [ ] Stopping Monitoring...`);
 	clearTimeout(timeoutID);
 	console.log(`[wykop-monitor] [✓] Monitoring ended`);
+}
+
+exports.databaseExtract = async () => {
+	return await w.databaseExtract()
 }
 
 // Latest content 'memory'

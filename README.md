@@ -28,20 +28,21 @@ For more info see the ["Documentation"](#documentation) below
 
 ## Considerations
 
-You'll need to provide at least (a) an `appkey` and a `secret`, (b) a `rtoken` or (c) a `token`. The best option is to provide an `appkey` and `secret`, that way we can generate tokens whenever we need a new one and you don't need to keep track of them. The second best option is to provide a `rtoken`, you'll be logged in and we can generate new tokens, but you'll need to keep track of the latest `rtoken` somewhere, so you can easily create a new Wykop instance. The last option is to provide a `token` but you'll be limited by the expiration date on the token, so keep that in mind.
-
 For the monitoring to work the way you'd like, there are a few things to consider:
 - When using the monitor without logging in:
 	- Global blacklists might be active (think #polityka for non-logged users)
 	- Note: user categories (buckets) are available even when not logged in 
 - When using the monitor while logged in to your account:
 	- Blacklists will be active and filter content
-	- You will be able to interact with content ([see WykopJS for more info](https://github.com/xxdeepfriedxx/wykop))
+	- You will be able to directly interact with content ([see WykopJS for more info](https://github.com/xxdeepfriedxx/wykop))
 
 ## "Documentation"
 
 ### Monitor.start(options)
 - This starts the monitoring process, it should be at the end of your code
+
+
+
 - The available options:
 
 | Option                 | Default                     | Description |
@@ -51,8 +52,30 @@ For the monitoring to work the way you'd like, there are a few things to conside
 | `options.secret`       | `null`                      | <optional*> The secret you received from Wykop.pl |
 | `options.token`        | `null`                      | <optional*> Your access token for Wykop.pl |
 | `options.rtoken`       | `null`                      | <optional*> Your refresh token for Wykop.pl |
-| `options.username`     | `null`                      | <optional>  Your username for Wykop.pl |
-| `options.password`     | `null`                      | <optional>  Your password for Wykop.pl |
+| `options.username`     | `null`                      | <optional>  Your username for Wykop.pl ** |
+| `options.password`     | `null`                      | <optional>  Your password for Wykop.pl ** |
+
+* = You'll need to provide at least (a) an `appkey` and a `secret`, (b) a `rtoken` or (c) a `token`. The best option is to provide an `appkey` and `secret`, that way we can generate tokens whenever we need a new one and you don't need to keep track of them. The second best option is to provide a `rtoken`, you'll be logged in and we can generate new tokens, but you'll need to keep track of the latest `rtoken` somewhere, so you can easily create a new Wykop instance. The last option is to provide a `token` but you'll be limited by the expiration date on the token, so keep that in mind.
+
+** = I don't think permissions for logging in with a username and password are given to 3rd party apps, so keep in mind that you will probably get error `application_not_permission` when providing a username/password. The best option would be to provide an `rtoken` and after your calls to the API have completed you save the new rtoken somewhere. See [Monitor.databaseExtract()](#monitordatabaseextract) below on how to get the tokens.
+
+### Monitor.stop()
+This ends the monitoring
+```javascript
+Monitor.stop()
+```
+
+### Monitor.databaseExtract()
+This can be called just before stopping your app to save the latest tokens, that way you don't have to get a new `rtoken` every time
+```javascript
+Monitor.databaseExtract()
+// Returns a Promise that resolves to an object that has the latest 'token' and 'rtoken' values:
+// {
+// 	  token: <latest-token>,
+// 	  rtoken: <latest-refresh-token>,
+//    ...
+// }
+```
 
 ### Monitor.links(options, callback)
 - Allows for monitoring new links
