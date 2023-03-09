@@ -47,13 +47,13 @@ For the monitoring to work the way you'd like, there are a few things to conside
 
 | Option                 | Default                     | Description |
 | ---                    | ---                         | --- |
-| `options.interval`     | `60`                        | <optional>  The interval between content checks |
-| `options.appkey`       | `null`                      | <optional(1)> The appkey you received from Wykop.pl |
-| `options.secret`       | `null`                      | <optional(1)> The secret you received from Wykop.pl |
-| `options.token`        | `null`                      | <optional(1)> Your access token for Wykop.pl |
-| `options.rtoken`       | `null`                      | <optional(1)> Your refresh token for Wykop.pl |
-| `options.username`     | `null`                      | <optional>  Your username for Wykop.pl (2) |
-| `options.password`     | `null`                      | <optional>  Your password for Wykop.pl (2) |
+| `options.interval`     | `60`                        | \<optional>  The interval between content checks |
+| `options.appkey`       | `null`                      | \<optional> The appkey you received from Wykop.pl (1) |
+| `options.secret`       | `null`                      | \<optional> The secret you received from Wykop.pl (1) |
+| `options.token`        | `null`                      | \<optional> Your access token for Wykop.pl (1) |
+| `options.rtoken`       | `null`                      | \<optional> Your refresh token for Wykop.pl (1) |
+| `options.username`     | `null`                      | \<optional>  Your username for Wykop.pl (2) |
+| `options.password`     | `null`                      | \<optional>  Your password for Wykop.pl (2) |
 
 
 (1) You'll need to provide at least (a) an `appkey` and a `secret`, (b) a `rtoken` or (c) a `token`. The best option is to provide an `appkey` and `secret`, that way we can generate tokens whenever we need a new one and you don't need to keep track of them. The second best option is to provide a `rtoken`, you'll be logged in and we can generate new tokens, but you'll need to keep track of the latest `rtoken` somewhere, so you can easily create a new Wykop instance. The last option is to provide a `token` but you'll be limited by the expiration date on the token, so keep that in mind.
