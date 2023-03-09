@@ -38,16 +38,16 @@ For the monitoring to work the way you'd like, there are a few things to conside
 
 ## "Documentation"
 
-- [Monitor.start(options)](#monitor.startoptions)
-- [Monitor.stop()](#monitor.stop)
-- [Monitor.databaseExtract()](#monitor.databaseextract)
-- [Monitor.links(options, callback)](#monitor.linksoptions-callback)
-- [Monitor.entries(options, callback)](#monitor.entriesoptions-callback)
-- [Monitor.tags(options, callback)](#monitor.tagsoptions-callback)
-- [Monitor.notifications(options, callback)](#monitor.notificationsoptions-callback)
-- [Monitor.pms(options, callback)](#monitor.pmsoptions-callback)
-- [Monitor.userLinks(options, callback)](#monitor.userlinksoptions-callback)
-- [Monitor.userEntries(options, callback)](#monitor.userentriesoptions-callback)
+- [Monitor.start(options)](#monitorstartoptions)
+- [Monitor.stop()](#monitorstop)
+- [Monitor.databaseExtract()](#monitordatabaseextract)
+- [Monitor.links(options, callback)](#monitorlinksoptions-callback)
+- [Monitor.entries(options, callback)](#monitorentriesoptions-callback)
+- [Monitor.tags(options, callback)](#monitortagsoptions-callback)
+- [Monitor.notifications(options, callback)](#monitornotificationsoptions-callback)
+- [Monitor.pms(options, callback)](#monitorpmsoptions-callback)
+- [Monitor.userLinks(options, callback)](#monitoruserlinksoptions-callback)
+- [Monitor.userEntries(options, callback)](#monitoruserentriesoptions-callback)
 
 ### Monitor.start(options)
 - This starts the monitoring process, it should be at the end of your code
