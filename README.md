@@ -168,8 +168,8 @@ Examples:
 // Callback will be called for mentions of your username in entries
 Monitor.pms({}, async ({ notification }) => {
 
-    // do something with the notificaiton, in this case we can access the entry like so:
-    const entry = notification.entry
+    // do something with the notificaiton, in this case we can fetch the conversation like so:
+    const conversation = notification.conversation.get()
 });
 ```
 
