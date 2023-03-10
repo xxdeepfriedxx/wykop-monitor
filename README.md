@@ -66,7 +66,7 @@ For the monitoring to work the way you'd like, there are a few things to conside
 
 (1) You'll need to provide at least (a) an `appkey` and a `secret`, (b) a `rtoken` or (c) a `token`. The best option is to provide an `appkey` and `secret`, that way we can generate tokens whenever we need a new one and you don't need to keep track of them. The second best option is to provide a `rtoken`, you'll be logged in and we can generate new tokens, but you'll need to keep track of the latest `rtoken` somewhere, so you can easily create a new Wykop instance. The last option is to provide a `token` but you'll be limited by the expiration date on the token, so keep that in mind.
 
-(2) Permissions for logging in with a username and password are not given to 3rd party apps, so keep in mind that you will probably get error `application_not_permission` when providing a username/password. The best option would be to provide an `rtoken` and when you app is about to shut down you save the latest tokens somewhere. See [Monitor.databaseExtract()](#monitordatabaseextract) below on how to get your tokens.
+(2) Permissions for logging in with a username and password are not given to 3rd party apps, so keep in mind that you will probably get error `application_not_permission` when providing a username/password. The best option would be to provide an `rtoken` and when your app is about to shut down you save the latest tokens somewhere. See [Monitor.databaseExtract()](#monitordatabaseextract) below on how to get your tokens.
 
 ### Monitor.stop()
 This ends the monitoring
