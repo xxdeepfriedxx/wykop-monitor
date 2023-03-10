@@ -89,6 +89,7 @@ Monitor.databaseExtract()
 ### Monitor.links(options, callback)
 - Allows for monitoring new links
 - Can be filtered using a bucket (user category)
+
 Examples:
 ```javascript
 // Callback will be called for all new links
@@ -107,6 +108,7 @@ Monitor.links({ category: 'informacje' }, callback)
 ### Monitor.entries(options, callback)
 - Allows for monitoring new entries
 - Can be filtered using a bucket (user category)
+
 Examples:
 ```javascript
 // Callback will be called for all new entries
@@ -125,6 +127,7 @@ Monitor.entries({ category: 'informacje' }, callback)
 ### Monitor.tags(options, callback)
 - Allows for monitoring new content in a tag
 - Can be filtered by type: `entry` or `link`
+
 Examples:
 ```javascript
 // Callback will be called for all new links
@@ -144,6 +147,7 @@ Monitor.tags({ tag: 'heheszki', type: 'entry' }, callback)
 - **This method requires you to be logged in to your account**
 - Allows for monitoring new notifications
 - Can be filtered based on notification types: `new_link`, `new_comment_in_link`, `new_entry`, `new_comment_in_entry`, `new_follower`, `link_in_upcoming`, `link_on_homepage`, `link_was_buried`, `moderation_action`, `new_badge`, `system`, `new_issue_response`
+
 Examples:
 ```javascript
 // Callback will be called for mentions of your username in entries
@@ -163,6 +167,7 @@ Monitor.notifications({}, callback)
 ### Monitor.pms(options, callback)
 - **This method requires you to be logged in to your account**
 - Allows for monitoring of new private messages
+
 Examples:
 ```javascript
 // Callback will be called for mentions of your username in entries
@@ -175,6 +180,7 @@ Monitor.pms({}, async ({ notification }) => {
 
 ### Monitor.userLinks(options, callback)
 - Allows for monitoring all new links added by a specific user
+
 Examples:
 ```javascript
 // Callback will be called for all new links added by 'wykop'
@@ -186,6 +192,7 @@ Monitor.userLinks({ username: 'wykop' }, async ({ link }) => {
 
 ### Monitor.userEntries(options, callback)
 - Allows for monitoring all new entries added by a specific user
+
 Examples:
 ```javascript
 // Callback will be called for all new entries added by 'wykop'
