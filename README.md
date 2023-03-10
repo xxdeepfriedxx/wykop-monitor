@@ -14,14 +14,14 @@ const Monitor = require('wykop-monitor');
 // Add a comment to an entry where someone mentioned you
 Monitor.notifications({ types: ['new_entry']}, async ({ notification }) => {
 
-	// Add the comment and print the resulting EntryComment object
-	await notification.entry.submitComment({ content: 'Nice entry!' }).then(console.log)
+    // Add the comment and print the resulting EntryComment object
+    await notification.entry.submitComment({ content: 'Nice entry!' }).then(console.log)
 });
 
 // Start monitoring
 Monitor.start({
-	interval: 60,
-	rtoken: '<your-refresh-token>'
+    interval: 60,
+    rtoken: '<your-refresh-token>'
 });
 ```
 For more info see the ["Documentation"](#documentation) below
@@ -30,11 +30,11 @@ For more info see the ["Documentation"](#documentation) below
 
 For the monitoring to work the way you'd like, there are a few things to consider:
 - When using the monitor without logging in:
-	- Global blacklists might be active (think #polityka for non-logged users)
-	- Note: user categories (buckets) are available even when not logged in 
+    - Global blacklists might be active (think #polityka for non-logged users)
+    - Note: user categories (buckets) are available even when not logged in 
 - When using the monitor while logged in to your account:
-	- Blacklists will be active and filter content
-	- You will be able to directly interact with content ([see WykopJS for more info](https://github.com/xxdeepfriedxx/wykop))
+    - Blacklists will be active and filter content
+    - You will be able to directly interact with content ([see WykopJS for more info](https://github.com/xxdeepfriedxx/wykop))
 
 ## "Documentation"
 
@@ -80,8 +80,8 @@ This can be called just before stopping your app to save the latest tokens, that
 Monitor.databaseExtract()
 // Returns a Promise that resolves to an object that has the latest 'token' and 'rtoken' values:
 // {
-// 	  token: <latest-token>,
-// 	  rtoken: <latest-refresh-token>,
+//    token: <latest-token>,
+//    rtoken: <latest-refresh-token>,
 //    ...
 // }
 ```
@@ -93,8 +93,8 @@ Examples:
 ```javascript
 // Callback will be called for all new links
 Monitor.links(null, async ({ link }) => {
-	
-	// do something with the link
+    
+    // do something with the link
 })
 
 // Callback will be called for new links in your category
@@ -111,8 +111,8 @@ Examples:
 ```javascript
 // Callback will be called for all new entries
 Monitor.entries({}, async ({ entry }) => {
-	
-	// do something with the entry
+    
+    // do something with the entry
 })
 
 // Callback will be called for new entries in your category
@@ -129,8 +129,8 @@ Examples:
 ```javascript
 // Callback will be called for all new links
 Monitor.tags({ tag: 'heheszki' }, async ({ link, entry }) => {
-	
-	// do something with the link or entry
+    
+    // do something with the link or entry
 })
 
 // Callback will be called for new links in global category
@@ -149,8 +149,8 @@ Examples:
 // Callback will be called for mentions of your username in entries
 Monitor.notifications({ types: ['new_entry'] }, async ({ notification, entry }) => {
 
-	// do something with the notificaiton, in this case we can access the entry like so:
-	const entry = notification.entry
+    // do something with the notificaiton, in this case we can access the entry like so:
+    const entry = notification.entry
 });
 
 // Callback will be called for mentions of your username in entries and entry comments
@@ -168,8 +168,8 @@ Examples:
 // Callback will be called for mentions of your username in entries
 Monitor.pms({}, async ({ notification }) => {
 
-	// do something with the notificaiton, in this case we can access the entry like so:
-	const entry = notification.entry
+    // do something with the notificaiton, in this case we can access the entry like so:
+    const entry = notification.entry
 });
 ```
 
@@ -179,8 +179,8 @@ Examples:
 ```javascript
 // Callback will be called for all new links added by 'wykop'
 Monitor.userLinks({ username: 'wykop' }, async ({ link }) => {
-	
-	// do something with the link
+    
+    // do something with the link
 })
 ```
 
@@ -190,8 +190,8 @@ Examples:
 ```javascript
 // Callback will be called for all new entries added by 'wykop'
 Monitor.userEntries({ username: 'wykop' }, async ({ entry }) => {
-	
-	// do something with the entry
+    
+    // do something with the entry
 })
 ```
 
