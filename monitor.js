@@ -5,26 +5,30 @@ const crypto = require('crypto');
 const defaultInterval = 60
 
 let w = null
+let _debug = false
 let timeoutID = null
 let errorCallback = null
 
 // Main function
 exports.start = async ({ interval = defaultInterval, appkey, secret, token, rtoken, environment, username, password, debug = false, debugAPI = false }) => {
+	console.log(_debug, debug)
+	_debug = debug
+	console.log(_debug, debug)
 
 	// Setup the Wykop SDK
-	console.log(`[wykop-monitor] [ ] Initializing Wykop SDK...`);
+	if (_debug) { console.log(`[wykop-monitor] [ ] Initializing Wykop SDK...`); }
 	try {
 		w = new (await Wykop).default({ appkey: appkey, secret: secret, token: token, rtoken: rtoken, environment: environment, debug: debugAPI });
-		console.log(`[wykop-monitor] [✓] Wykop SDK Initialized`);
+		if (_debug) { console.log(`[wykop-monitor] [✓] Wykop SDK Initialized`); }
 	} catch (error) {
 		return console.log(`[wykop-monitor] [x] Failed to initialize Wykop SDK, see error below:\n`, error.stack ?? error.response ?? error.request ?? error);
 	}
 
 	if (username && password) {
-		console.log(`[wykop-monitor] [ ] Username and password for Wykop.pl provided; logging in..`);
+		if (_debug) { console.log(`[wykop-monitor] [ ] Username and password for Wykop.pl provided; logging in..`); }
 		try {
 			await w.login(username, password);
-			console.log(`[wykop-monitor] [✓] Login successful`);
+			if (_debug) { console.log(`[wykop-monitor] [✓] Login successful`); }
 		} catch (error) {
 			return console.log(`[wykop-monitor] [x] Login failed, see error below:\n`, error.stack ?? error.response ?? error.request ?? error);
 		}
@@ -36,34 +40,34 @@ exports.start = async ({ interval = defaultInterval, appkey, secret, token, rtok
 
 	// On the first run we check the latest posts without calling the callback();
 	const timeoutFunction = async function(firstRun = false) {
-		if (!firstRun && debug) { console.log(`[wykop-monitor] Checking for new content!`); }
+		if (!firstRun && _debug) { console.log(`[wykop-monitor] Checking for new content!`); }
 		for (let key in contentFunctions) { await checkForContent(contentFunctions[key], firstRun) }
 		for (let key in notificationFunctions) { await checkForNotifications(notificationFunctions[key], firstRun) }
 	}
 	
 	// Save latest posts
-	console.log(`[wykop-monitor] [ ] Saving latest content...`);
+	if (_debug) { console.log(`[wykop-monitor] [ ] Saving latest content...`); }
 	try {
 		await timeoutFunction(true);
-		console.log(`[wykop-monitor] [✓] Latest content saved`);
+		if (_debug) { console.log(`[wykop-monitor] [✓] Latest content saved`); }
 	} catch (error) {
 		return console.log(`[wykop-monitor] [x] Failed while trying to save the latest content, see error below:\n`, error.stack ?? error.response ?? error.request ?? error);
 	}
 
 	// Start monitoring
-	console.log(`[wykop-monitor] [ ] Monitoring starting... checking every ${interval} seconds`);
+	if (_debug) { console.log(`[wykop-monitor] [ ] Monitoring starting... checking every ${interval} seconds`); }
 	try {
 		timeoutID = setInterval(timeoutFunction, interval * 1000);
-		console.log(`[wykop-monitor] [✓] Monitoring started`);
+		if (_debug) { console.log(`[wykop-monitor] [✓] Monitoring started`); }
 	} catch (error) {
 		return console.log(`[wykop-monitor] [x] Failed to start Monitoring, see error below:\n`, error.stack ?? error.response ?? error.request ?? error);
 	}
 }
 
 exports.stop = () => {
-	console.log(`[wykop-monitor] [ ] Stopping Monitoring...`);
+	if (_debug) { console.log(`[wykop-monitor] [ ] Stopping Monitoring...`); }
 	clearTimeout(timeoutID);
-	console.log(`[wykop-monitor] [✓] Monitoring ended`);
+	if (_debug) { console.log(`[wykop-monitor] [✓] Monitoring ended`); }
 }
 
 exports.databaseExtract = async () => {
@@ -102,7 +106,14 @@ async function checkForContent(configs, saveOnly) {
 async function checkForNotifications(configs, saveOnly) {
 	if (configs.length === 0) { return }
 	for (config of configs) {
-		const latest = await config.request();
+		let latest = { items: [] }
+
+		try {
+			latest = await config.request();
+		} catch (error) {
+			return console.log(`[wykop-monitor] [x] Failed while trying to fetch the latest notification, see error below:\n`, error.stack ?? error.response ?? error.request ?? error);
+		}
+
 		if (latest.items.length === 0) { return }
 		for (notification of latest.items) {
 			if (config.filter !== undefined && !config.filter.includes(notification.type)) { break } 
