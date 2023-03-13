@@ -11,9 +11,7 @@ let errorCallback = null
 
 // Main function
 exports.start = async ({ interval = defaultInterval, appkey, secret, token, rtoken, environment, username, password, debug = false, debugAPI = false }) => {
-	console.log(_debug, debug)
 	_debug = debug
-	console.log(_debug, debug)
 
 	// Setup the Wykop SDK
 	if (_debug) { console.log(`[wykop-monitor] [ ] Initializing Wykop SDK...`); }
@@ -295,6 +293,7 @@ function saveNotificationConfig({ type, types, request, callback }) {
 	});
 }
 
+// -- Helpers
 function generateKey() {
 	return crypto.randomBytes(20).toString('hex');
 }
