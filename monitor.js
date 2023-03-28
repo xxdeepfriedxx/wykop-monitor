@@ -1,4 +1,4 @@
-const Wykop = import('wykop');
+const Wykop = require('wykop');
 const assert = require('assert');
 const crypto = require('crypto');
 
@@ -16,7 +16,7 @@ exports.start = async ({ interval = defaultInterval, appkey, secret, token, rtok
 	// Setup the Wykop SDK
 	if (_debug) { console.log(`[wykop-monitor] [ ] Initializing Wykop SDK...`); }
 	try {
-		w = new (await Wykop).default({ appkey: appkey, secret: secret, token: token, rtoken: rtoken, environment: environment, debug: debugAPI });
+		w = new Wykop({ appkey: appkey, secret: secret, token: token, rtoken: rtoken, environment: environment, debug: debugAPI });
 		if (_debug) { console.log(`[wykop-monitor] [✓] Wykop SDK Initialized`); }
 	} catch (error) {
 		return console.log(`[wykop-monitor] [x] Failed to initialize Wykop SDK, see error below:\n`, error.stack ?? error.response ?? error.request ?? error);
