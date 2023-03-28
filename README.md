@@ -128,7 +128,7 @@ Monitor.entries({ category: 'informacje' }, callback)
 ### Monitor.tags(options, callback)
 - Allows for monitoring new content in a tag
 - Can be filtered by type: `entry` or `link`
-- ⚠️ If you'd like to monitor multiple tags, it might be better to use [Monitor.entries(options, callback)](#monitorentriesoptions-callback) with a custom bucket (user category) instead of multiple.
+- ⚠️ If you'd like to monitor multiple tags, it might be better to use [Monitor.entries(options, callback)](#monitorentriesoptions-callback) with a custom bucket (user category) instead.
 
 Examples:
 ```javascript
