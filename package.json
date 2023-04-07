@@ -1,6 +1,6 @@
 {
   "name": "wykop-monitor",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A package to monitor for new links, entries, mentions and private messages on Wykop.pl",
   "homepage": "https://github.com/xxdeepfriedxx/wykop-monitor",
   "license": "SEE LICENSE IN LICENSE",
@@ -10,6 +10,6 @@
   },
   "author": "xxdeepfriedxx",
   "dependencies": {
-    "wykop": "^1.1.4"
+    "wykop": "^1.1.5"
   }
 }

@@ -46,6 +46,7 @@ For the monitoring to work the way you'd like, there are a few things to conside
 - [Monitor.tags(options, callback)](#monitortagsoptions-callback)
 - [Monitor.notifications(options, callback)](#monitornotificationsoptions-callback)
 - [Monitor.pms(options, callback)](#monitorpmsoptions-callback)
+- [Monitor.conversation(options, callback)](#monitorconversationoptions-callback)
 - [Monitor.userLinks(options, callback)](#monitoruserlinksoptions-callback)
 - [Monitor.userEntries(options, callback)](#monitoruserentriesoptions-callback)
 
@@ -184,6 +185,19 @@ Monitor.pms({}, async ({ notification }) => {
 
     // do something with the notificaiton, in this case we can fetch the conversation like so:
     const conversation = notification.conversation.get()
+});
+```
+
+### Monitor.conversation(options, callback)
+- **This method requires you to be logged in to your account**
+- Allows for monitoring of new private messages
+
+Examples:
+```javascript
+// Callback will be called for new messages in the conversation with 'wykop'
+Monitor.conversation({ username: 'wykop' }, async ({ message, conversation }) => {
+
+    // do something with the message/conversation object
 });
 ```
 

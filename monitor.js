@@ -32,7 +32,7 @@ exports.start = async ({ interval = defaultInterval, appkey, secret, token, rtok
 		}
 	}
 
-	if (Object.keys(contentFunctions).length === 0 && Object.keys(notificationFunctions).length === 0) {
+	if (Object.keys(contentFunctions).length === 0) {
 		return console.log(`[wykop-monitor] [x] Nothing found to monitor...`);
 	}
 
@@ -40,7 +40,6 @@ exports.start = async ({ interval = defaultInterval, appkey, secret, token, rtok
 	const timeoutFunction = async function(firstRun = false) {
 		if (!firstRun && _debug) { console.log(`[wykop-monitor] Checking for new content!`); }
 		for (let key in contentFunctions) { await checkForContent(contentFunctions[key], firstRun) }
-		for (let key in notificationFunctions) { await checkForNotifications(notificationFunctions[key], firstRun) }
 	}
 	
 	// Save latest posts
@@ -72,6 +71,11 @@ exports.databaseExtract = async () => {
 	return await w.databaseExtract()
 }
 
+const contentTypes = ["link", "entry", "tag", "user-link", "user-link-comment", "user-link-voted", "user-entry", "user-entry-comment", "user-entry-voted"]
+const notificationTypes = ["notification"]
+const pmTypes = ["pm"]
+const conversationTypes = ["conversation"]
+
 // Latest content 'memory'
 let latestIds = {}
 
@@ -86,47 +90,93 @@ async function checkForContent(configs, saveOnly) {
 			return console.log(`[wykop-monitor] [x] Failed while trying to fetch the latest content, see error below:\n`, error.stack ?? error.response ?? error.request ?? error);
 		}
 
-		if (latest.items.length === 0) { return }
-		for (post of latest.items) {
-			if (saveOnly) { break }
-			if (getContentId(post) <= latestIds[config.key]) { break }
-			config.callback({ 
-				[getPostType(post)]: post, 
-				client: w
-			});
+		if (contentTypes.includes(config.type)) {
+			handleContent(config, latest, saveOnly)
+			continue
 		}
 
-		if (latestIds[config.key] === undefined) { latestIds[config.key] = {} }
-		latestIds[config.key] = getContentId(latest.items[0])
+		if (notificationTypes.includes(config.type)) {
+			handleNotification(config, latest, saveOnly)
+			continue
+		}
+
+		if (pmTypes.includes(config.type)) {
+			handlePM(config, latest, saveOnly)
+			continue
+		}
+
+		if (conversationTypes.includes(config.type)) {
+			handleConversation(config, latest, saveOnly)
+			continue
+		}
 	}
 }
 
-async function checkForNotifications(configs, saveOnly) {
-	if (configs.length === 0) { return }
-	for (config of configs) {
-		let latest = { items: [] }
-
-		try {
-			latest = await config.request();
-		} catch (error) {
-			return console.log(`[wykop-monitor] [x] Failed while trying to fetch the latest notification, see error below:\n`, error.stack ?? error.response ?? error.request ?? error);
-		}
-
-		if (latest.items.length === 0) { return }
-		for (notification of latest.items) {
-			if (config.filter !== undefined && !config.filter.includes(notification.type)) { break } 
-			if (saveOnly) { break }
-			if (getContentId(notification) <= latestIds[config.key]) { break }
-			config.callback({ 
-				notification: notification, 
-				client: w
-			});
-		}
-
-		const newestNotification = latest.items[0];
-		if (latestIds[config.key] === undefined) { latestIds[config.key] = {} }
-		latestIds[config.key] = getContentId(newestNotification)
+async function handleContent(config, latest, saveOnly) {
+	if (latest.items.length === 0) { return }
+	for (post of latest.items) {
+		if (saveOnly) { break }
+		if (getContentId(post) <= latestIds[config.key]) { break }
+		config.callback({ 
+			[getPostType(post)]: post, 
+			client: w
+		});
 	}
+
+	if (latestIds[config.key] === undefined) { latestIds[config.key] = {} }
+	latestIds[config.key] = getContentId(latest.items[0])
+}
+
+async function handleNotification(config, latest, saveOnly) {
+	if (latest.items.length === 0) { return }
+	for (notification of latest.items) {
+		if (config.filter !== undefined && !config.filter.includes(notification.type)) { continue } 
+		if (saveOnly) { break }
+		if (getContentId(notification) <= latestIds[config.key]) { break }
+		config.callback({ 
+			notification: notification, 
+			client: w
+		});
+	}
+
+	const newestNotification = latest.items[0];
+	if (latestIds[config.key] === undefined) { latestIds[config.key] = {} }
+	latestIds[config.key] = getContentId(newestNotification)
+}
+
+async function handlePM(config, latest, saveOnly) {
+	if (latest.items.length === 0) { return }
+	for (conversation of latest.items) {
+		if (saveOnly) { break }
+		if (getContentId(conversation.last_message) <= latestIds[config.key]) { break }
+		config.callback({ 
+			conversation: conversation,
+			client: w
+		});
+	}
+
+	const newestConversation = latest.items[0];
+	if (latestIds[config.key] === undefined) { latestIds[config.key] = {} }
+	latestIds[config.key] = getContentId(newestConversation.last_message)
+}
+
+async function handleConversation(config, latest, saveOnly) {
+	if (latest.messages.length === 0) { return }
+	latest.messages = latest.messages.reverse()
+	for (message of latest.messages) {
+		if (config.excludeSelf && message.type === 0) { continue } 
+		if (saveOnly) { break }
+		if (getContentId(message) <= latestIds[config.key]) { break }
+		config.callback({ 
+			message: message,
+			conversation: latest,
+			client: w
+		});
+	}
+
+	const newestMessage = latest.messages[0];
+	if (latestIds[config.key] === undefined) { latestIds[config.key] = {} }
+	latestIds[config.key] = getContentId(newestMessage)
 }
 
 // new links
@@ -261,7 +311,7 @@ exports.notifications = ({ types } = {}, callback) => {
 
 // new private message - requires login
 exports.pms = (_, callback) => { 
-	saveNotificationConfig({ 
+	savePmConfig({ 
 		request: function() {
 			return w.getConversations();
 		},
@@ -270,13 +320,26 @@ exports.pms = (_, callback) => {
 	});
 }
 
+// new private message in conversation - requires login
+exports.conversation = ({ username, excludeSelf } = {}, callback) => { 
+	assert(username, `[wykop-monitor] No value specified for 'username'`);
+	savePmConfig({ 
+		request: function() {
+			return w.getConversation(username);
+		},
+		type: 'conversation',
+		excludeSelf: excludeSelf,
+		callback: callback
+	});
+}
+
 // -- Function storage
 let contentFunctions = {}
-let notificationFunctions = {}
 
 function saveContentConfig({ type, request, callback }) {
 	if (contentFunctions[type] === undefined) { contentFunctions[type] = [] }
 	contentFunctions[type].push({
+		type: type,
 		request: request,
 		callback: callback,
 		key: generateKey()
@@ -284,11 +347,23 @@ function saveContentConfig({ type, request, callback }) {
 }
 
 function saveNotificationConfig({ type, types, request, callback }) {
-	if (notificationFunctions[type] === undefined) { notificationFunctions[type] = [] }
-	notificationFunctions[type].push({
+	if (contentFunctions[type] === undefined) { contentFunctions[type] = [] }
+	contentFunctions[type].push({
+		type: type,
 		request: request,
 		callback: callback,
 		filter: types,
+		key: generateKey()
+	});
+}
+
+function savePmConfig({ type, excludeSelf, request, callback }) {
+	if (contentFunctions[type] === undefined) { contentFunctions[type] = [] }
+	contentFunctions[type].push({
+		type: type,
+		request: request,
+		callback: callback,
+		excludeSelf: excludeSelf,
 		key: generateKey()
 	});
 }
