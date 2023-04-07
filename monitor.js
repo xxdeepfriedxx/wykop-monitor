@@ -147,6 +147,7 @@ async function handleNotification(config, latest, saveOnly) {
 async function handlePM(config, latest, saveOnly) {
 	if (latest.items.length === 0) { return }
 	for (conversation of latest.items) {
+		if (config.excludeSelf && conversation.last_message.type === 0) { continue } 
 		if (saveOnly) { break }
 		if (getContentId(conversation.last_message) <= latestIds[config.key]) { break }
 		config.callback({ 
@@ -310,12 +311,13 @@ exports.notifications = ({ types } = {}, callback) => {
 }
 
 // new private message - requires login
-exports.pms = (_, callback) => { 
+exports.pms = ({ excludeSelf } = {}, callback) => { 
 	savePmConfig({ 
 		request: function() {
 			return w.getConversations();
 		},
 		type: 'pm',
+		excludeSelf: excludeSelf,
 		callback: callback
 	});
 }
