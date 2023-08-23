@@ -6,7 +6,8 @@
   "license": "SEE LICENSE IN LICENSE",
   "main": "monitor.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "author": "xxdeepfriedxx",
   "dependencies": {
@@ -14,6 +15,9 @@
   },
   "devDependencies": {
     "eslint": "^8.47.0"
+  },
+  "engines" : { 
+    "node": ">=14.21.3"
   },
   "eslintConfig": {
     "env": {
