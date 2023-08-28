@@ -70,7 +70,7 @@ exports.databaseExtract = async () => {
 	return await w.databaseExtract();
 };
 
-const contentTypes = ['link', 'entry', 'tag', 'user-link', 'user-link-comment', 'user-link-voted', 'user-entry', 'user-entry-comment', 'user-entry-voted'];
+const contentTypes = ['link', 'link-comment', 'link-related', 'entry', 'entry-comment', 'tag', 'user-link', 'user-link-comment', 'user-link-voted', 'user-entry', 'user-entry-comment', 'user-entry-voted'];
 const notificationTypes = ['notification'];
 const pmTypes = ['pm'];
 const conversationTypes = ['conversation'];
@@ -194,6 +194,36 @@ exports.links = ({ category, bucket } = {}, callback) => {
 	});
 };
 
+// new link comment
+exports.linkComments = ({ linkId, commentId } = {}, callback) => {
+	assert(linkId, '[wykop-monitor] No value specified for \'linkId\'');
+	saveContentConfig({ 
+		request: function() {
+			return w.link(linkId).getComments({
+				commentId: commentId,
+				sort: 'newest'
+			});
+		},
+		type: 'link-comment',
+		callback: callback
+	});
+};
+
+// new link comment
+exports.relatedLinks = ({ linkId } = {}, callback) => {
+	assert(linkId, '[wykop-monitor] No value specified for \'linkId\'');
+	saveContentConfig({ 
+		request: function() {
+			return w.link(linkId).getRelatedLinks().then(res => {
+				res.items.sort((a, b) => b.id - a.id);
+				return res;
+			});
+		},
+		type: 'link-related',
+		callback: callback
+	});
+};
+
 // new entries
 exports.entries = ({ category, bucket } = {}, callback) => { 
 	saveContentConfig({ 
@@ -205,6 +235,27 @@ exports.entries = ({ category, bucket } = {}, callback) => {
 			});
 		},
 		type: 'entry',
+		callback: callback
+	});
+};
+
+// new entry comment
+exports.entryComments = ({ entryId } = {}, callback) => {
+	assert(entryId, '[wykop-monitor] No value specified for \'entryId\'');
+	saveContentConfig({ 
+		request: function() {
+			return w.entry(entryId).getComments().then(res => {
+				const lastPage = Math.ceil(res.pagination.total/res.pagination.per_page);
+				if (lastPage > 1) {
+					return w.entry(entryId).getComments({ page: lastPage }).then(res => Promise.resolve(res));
+				}
+				return Promise.resolve(res);
+			}).then(res => {
+				res.items.reverse();
+				return res;
+			})
+		},
+		type: 'entry-comment',
 		callback: callback
 	});
 };
@@ -379,5 +430,7 @@ function getContentId(content) {
 }
 
 function getPostType(post) {
-	return ('title' in post ? 'link' : 'entry');
+	if (post.title && post.parent_id) { return 'related' }
+	if (post.resource === 'link_comment' || post.resource === 'entry_comment') { return 'comment'; }
+	return post.resource ?? 'content';
 }
