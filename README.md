@@ -42,7 +42,10 @@ For the monitoring to work the way you'd like, there are a few things to conside
 - [Monitor.stop()](#monitorstop)
 - [Monitor.databaseExtract()](#monitordatabaseextract)
 - [Monitor.links(options, callback)](#monitorlinksoptions-callback)
+- [Monitor.linkComments(options, callback)](#monitorlinkcommentsoptions-callback)
+- [Monitor.relatedLinks(options, callback)](#monitorrelatedlinksoptions-callback)
 - [Monitor.entries(options, callback)](#monitorentriesoptions-callback)
+- [Monitor.entryComments(options, callback)](#monitorentrycommentsoptions-callback)
 - [Monitor.tags(options, callback)](#monitortagsoptions-callback)
 - [Monitor.notifications(options, callback)](#monitornotificationsoptions-callback)
 - [Monitor.pms(options, callback)](#monitorpmsoptions-callback)
@@ -114,6 +117,33 @@ Monitor.links({ bucket: 'kjy2b3kjghvbwme' }, callback)
 Monitor.links({ category: 'informacje' }, callback)
 ```
 
+### Monitor.linkComments(options, callback)
+- Allows for monitoring new main-comments or sub-comments added to a specific link
+
+Examples:
+```javascript
+// Callback will be called for new main-comments added to a specific link
+Monitor.linkComments({ linkId: '1234' }, async ({ comment }) => {
+
+    // do something with the comment
+})
+
+// Callback will be called for new sub-comments added to a specific main-comment
+Monitor.linkComments({ linkId: '1234', commentId: '4321' }, callback)
+```
+
+### Monitor.relatedLinks(options, callback)
+- Allows for monitoring new related links added to a specific link
+
+Examples:
+```javascript
+// Callback will be called for new related links added to a specific link
+Monitor.relatedLinks({ linkId: '1234' }, async ({ related }) => {
+
+    // do something with the related link
+})
+```
+
 ### Monitor.entries(options, callback)
 - Allows for monitoring new entries
 - Can be filtered using a bucket (user category)
@@ -131,6 +161,18 @@ Monitor.entries({ bucket: 'kjy2b3kjghvbwme' }, callback)
 
 // Callback will be called for new entries in global category
 Monitor.entries({ category: 'informacje' }, callback)
+```
+
+### Monitor.entryComments(options, callback)
+- Allows for monitoring new comments added to a specific entry
+
+Examples:
+```javascript
+// Callback will be called for new comments in an entry
+Monitor.entryComments({ entryId: '1234' }, async ({ comment }) => {
+
+    // do something with the comment
+})
 ```
 
 ### Monitor.tags(options, callback)
