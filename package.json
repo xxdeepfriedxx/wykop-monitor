@@ -1,6 +1,6 @@
 {
   "name": "wykop-monitor",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A package to monitor for new links, entries, mentions and private messages on Wykop.pl",
   "homepage": "https://github.com/xxdeepfriedxx/wykop-monitor",
   "license": "SEE LICENSE IN LICENSE",
@@ -11,12 +11,12 @@
   },
   "author": "xxdeepfriedxx",
   "dependencies": {
-    "wykop": "^1.1.11"
+    "wykop": "^1.1.12"
   },
   "devDependencies": {
     "eslint": "^8.47.0"
   },
-  "engines" : { 
+  "engines": {
     "node": ">=14.17.0"
   },
   "eslintConfig": {

@@ -253,7 +253,7 @@ exports.entryComments = ({ entryId } = {}, callback) => {
 			}).then(res => {
 				res.items.reverse();
 				return res;
-			})
+			});
 		},
 		type: 'entry-comment',
 		callback: callback
@@ -430,7 +430,7 @@ function getContentId(content) {
 }
 
 function getPostType(post) {
-	if (post.title && post.parent_id) { return 'related' }
+	if (post.title && post.parent_id) { return 'related'; }
 	if (post.resource === 'link_comment' || post.resource === 'entry_comment') { return 'comment'; }
 	return post.resource ?? 'content';
 }
