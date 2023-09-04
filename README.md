@@ -175,10 +175,72 @@ Monitor.entryComments({ entryId: '1234' }, async ({ comment }) => {
 })
 ```
 
+### Monitor.searchLinks(options, callback)
+- Allows for monitoring new links based on a search
+- The `votes` option is unreliable and might skip some content
+
+Examples:
+```javascript
+// Callback will be called for new links based on a query
+Monitor.searchLinks({ query: 'wykop' }, async ({ link }) => {
+
+    // do something with the link
+})
+
+// Callback will be called for new links that include the tag #polska OR #polityka
+Monitor.searchLinks({ tags: ['polska', 'polityka'] }, callback)
+
+// Callback will be called for new links added by user @wykop OR @m__b
+Monitor.searchLinks({ users: ['wykop', 'm__b'] }, callback)
+
+// Callback will be called for new links that add content from example.com OR example.pl
+Monitor.searchLinks({ domains: ['example.com', 'example.pl'] }, callback)
+
+// Callback will be called for new links in a category
+Monitor.searchLinks({ category: '1000' }, callback)
+
+// Callback will be called for new links in a bucket
+Monitor.searchLinks({ bucket: '1000' }, callback)
+
+// Callback will be called for new links with at least a 1000 upvotes (unreliable)
+Monitor.searchLinks({ votes: '1000' }, callback)
+```
+
+### Monitor.searchEntries(options, callback)
+- Allows for monitoring new entries based on a search
+- The `votes` option is unreliable and might skip some content
+
+Examples:
+```javascript
+// Callback will be called for new entries based on a query
+Monitor.searchEntries({ query: 'wykop' }, async ({ entry }) => {
+
+    // do something with the entry
+})
+
+// Callback will be called for new entries that include the tag #polska OR #polityka
+Monitor.searchEntries({ tags: ['polska', 'polityka'] }, callback)
+
+// Callback will be called for new entries added by user @wykop OR @m__b
+Monitor.searchEntries({ users: ['wykop', 'm__b'] }, callback)
+
+// Callback will be called for new entries that add content from example.com OR example.pl
+Monitor.searchEntries({ domains: ['example.com', 'example.pl'] }, callback)
+
+// Callback will be called for new entries in a category
+Monitor.searchEntries({ category: '1000' }, callback)
+
+// Callback will be called for new entries in a bucket
+Monitor.searchEntries({ bucket: '1000' }, callback)
+
+// Callback will be called for new entries with at least a 1000 upvotes (unreliable)
+Monitor.searchEntries({ votes: '1000' }, callback)
+```
+
 ### Monitor.tags(options, callback)
 - Allows for monitoring new content in a tag
 - Can be filtered by type: `entry` or `link`
-- ⚠️ If you'd like to monitor multiple tags, it might be better to use [Monitor.entries(options, callback)](#monitorentriesoptions-callback) with a custom bucket (user category) instead.
+- ⚠️ If you plan to monitor multiple tags, it would be better to use [Monitor.entries(options, callback)](#monitorentriesoptions-callback) or [Monitor.links(options, callback)](#monitorlinksoptions-callback) with a custom bucket (user category) instead. 
 
 Examples:
 ```javascript

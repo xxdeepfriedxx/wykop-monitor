@@ -70,7 +70,7 @@ exports.databaseExtract = async () => {
 	return await w.databaseExtract();
 };
 
-const contentTypes = ['link', 'link-comment', 'link-related', 'entry', 'entry-comment', 'tag', 'user-link', 'user-link-comment', 'user-link-voted', 'user-entry', 'user-entry-comment', 'user-entry-voted'];
+const contentTypes = ['link', 'link-comment', 'link-related', 'entry', 'entry-comment', 'tag', 'search-link', 'search-entry', 'user-link', 'user-link-comment', 'user-link-voted', 'user-entry', 'user-entry-comment', 'user-entry-voted'];
 const notificationTypes = ['notification'];
 const pmTypes = ['pm'];
 const conversationTypes = ['conversation'];
@@ -271,6 +271,46 @@ exports.tags = ({ tag, type } = {}, callback) => {
 			});
 		},
 		type: 'tag',
+		callback: callback
+	});
+};
+
+// new link in search
+exports.searchLinks = ({ query, votes, tags, users, domains, category, bucket } = {}, callback) => { 
+	saveContentConfig({ 
+		request: function() {
+			return w.getSearchContent(query, {
+				type: 'links',
+				sort: 'newest',
+				votes: votes,
+				tags: tags,
+				users: users,
+				domains: domains,
+				category: category,
+				bucket: bucket,
+			});
+		},
+		type: 'search-link',
+		callback: callback
+	});
+};
+
+// new entry in search
+exports.searchEntries = ({ query, votes, tags, users, domains, category, bucket } = {}, callback) => { 
+	saveContentConfig({ 
+		request: function() {
+			return w.getSearchContent(query, {
+				type: 'entries',
+				sort: 'newest',
+				votes: votes,
+				tags: tags,
+				users: users,
+				domains: domains,
+				category: category,
+				bucket: bucket,
+			});
+		},
+		type: 'search-entry',
 		callback: callback
 	});
 };
