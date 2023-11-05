@@ -62,9 +62,18 @@ exports.start = async ({ interval = defaultInterval, appkey, secret, token, rtok
 
 exports.stop = () => {
 	if (_debug) { console.log('[wykop-monitor] [ ] Stopping Monitoring...'); }
-	clearTimeout(timeoutID);
+	clearInterval(timeoutID);
+	timeoutID = null;
 	if (_debug) { console.log('[wykop-monitor] [✓] Monitoring ended'); }
 };
+
+exports.reset = () => {
+	exports.stop();
+	if (_debug) { console.log('[wykop-monitor] [ ] Resetting...'); }
+	contentFunctions = {};
+	latestIds = {};
+	if (_debug) { console.log('[wykop-monitor] [✓] Monitor stopped and reset'); }
+}
 
 exports.databaseExtract = async () => {
 	return await w.databaseExtract();
@@ -79,7 +88,7 @@ const conversationTypes = ['conversation'];
 let latestIds = {};
 
 async function checkForContent(configs, saveOnly) {
-	if (configs.length === 0) { return; }
+	if (!configs || configs.length === 0) { return; }
 	for (let config of configs) {
 
 		let latest = { items: [] };

@@ -40,6 +40,7 @@ For the monitoring to work the way you'd like, there are a few things to conside
 
 - [Monitor.start(options)](#monitorstartoptions)
 - [Monitor.stop()](#monitorstop)
+- [Monitor.reset()](#monitorreset)
 - [Monitor.databaseExtract()](#monitordatabaseextract)
 - [Monitor.links(options, callback)](#monitorlinksoptions-callback)
 - [Monitor.linkComments(options, callback)](#monitorlinkcommentsoptions-callback)
@@ -84,6 +85,12 @@ Monitor.start({
 This ends the monitoring
 ```javascript
 Monitor.stop()
+```
+
+### Monitor.reset()
+This ends and resets the monitoring
+```javascript
+Monitor.reset()
 ```
 
 ### Monitor.databaseExtract()
